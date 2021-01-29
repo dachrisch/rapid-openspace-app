@@ -3,11 +3,12 @@ import os
 from flask import Flask
 from flask_bootstrap import Bootstrap
 
+from rapidos.config import DevelopmentConfig
 from rapidos.web.views.create import CreateView
 
 
 def add_views(flask_app: Flask):
-    CreateView.register(flask_app)
+    CreateView.register(flask_app, route_prefix='/rapidos')
 
 
 def app_api(flask_app: Flask):
@@ -21,6 +22,7 @@ def create_app():
 
     configure_app(flask_app)
     add_views(flask_app)
+
     app_api(flask_app)
 
     Bootstrap(flask_app)
@@ -30,7 +32,7 @@ def create_app():
 
 def configure_app(flask_app):
     app_config = {
-        'default': 'rapidos.config.DevelopmentConfig'
+        'default': DevelopmentConfig.config_string
     }
     config_name = os.getenv('FLASK_CONFIGURATION', 'default')
     flask_app.config.from_object(app_config[config_name])
