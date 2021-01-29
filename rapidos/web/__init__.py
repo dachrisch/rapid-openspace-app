@@ -8,7 +8,7 @@ from rapidos.web.views.create import CreateView
 
 
 def add_views(flask_app: Flask):
-    CreateView.register(flask_app, route_prefix='/rapidos')
+    CreateView.register(flask_app)
 
 
 def app_api(flask_app: Flask):

@@ -1,9 +1,10 @@
 from flask import render_template
-from flask_classful import FlaskView
+from flask_classful import FlaskView, route
 
 
 class CreateView(FlaskView):
-    route_base = '/create'
+    route_base = '/rapidos'
 
-    def index(self):
+    @route('/create')
+    def create(self):
         return render_template('create.html')
