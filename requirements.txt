@@ -1,4 +1,5 @@
 flask
 Flask-Bootstrap
 Flask-Classful
+flask_wtf
 waitress

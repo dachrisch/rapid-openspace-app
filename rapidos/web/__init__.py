@@ -32,7 +32,7 @@ def create_app():
 
 def configure_app(flask_app):
     app_config = {
-        'default': DevelopmentConfig.config_string
+        'default': DevelopmentConfig.config_string()
     }
     config_name = os.getenv('FLASK_CONFIGURATION', 'default')
     flask_app.config.from_object(app_config[config_name])

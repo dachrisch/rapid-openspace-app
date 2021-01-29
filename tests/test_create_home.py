@@ -11,4 +11,4 @@ class TestCreateHomeWeb(TestCase):
     def test_homepage(self):
         response = self.test_client.get('/rapidos/create', follow_redirects=False)
         self.assertEqual(200, response.status_code)
-        self.assertIn(b'<h1>Hello Open Space World</h1>', response.data)
+        self.assertIn(b'<h3>Willkommen zu deinem Open Space</h3>', response.data)

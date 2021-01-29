@@ -1,10 +1,16 @@
 # https://hackersandslackers.com/configure-flask-applications/
+import os
 
 
-class DevelopmentConfig(object):
+class BaseConfig(object):
+    RECAPTCHA_PUBLIC_KEY = os.getenv('RECAPTCHA_PUBLIC_KEY')
+    RECAPTCHA_SECRET_KEY = os.getenv('RECAPTCHA_PRIVATE_KEY')
+
+
+class DevelopmentConfig(BaseConfig):
     DEBUG = True
     TESTING = True
 
-    @property
-    def config_string(self):
-        return f'{self.__class__.__module__}.{self.__class__.__name__}'
+    @classmethod
+    def config_string(cls):
+        return f'{cls.__module__}.{cls.__name__}'
