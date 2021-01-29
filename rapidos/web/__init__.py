@@ -4,11 +4,22 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 
 from rapidos.config import DevelopmentConfig
-from rapidos.web.views.create import CreateView
+from rapidos.service import Container
+from rapidos.web import views
+from rapidos.web.views import CreateView
+from rapidos.web.views import ServeView
 
 
 def add_views(flask_app: Flask):
+    flask_app.container = create_container()
     CreateView.register(flask_app)
+    ServeView.register(flask_app)
+
+
+def create_container():
+    container = Container()
+    container.wire(modules=[views])
+    return container
 
 
 def app_api(flask_app: Flask):
