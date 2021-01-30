@@ -20,16 +20,10 @@
     <form action="{{ url_for('CreateView:create') }}" class="no-padding" id="create_form" method="post">
         <div class="form-row">
             {{ wtf.form_errors(form, hiddens="only") }}
-            <fieldset class="form-control-lg">
-                {{ wtf.form_field(form.name_field) }}
-            </fieldset>
-            <fieldset class="form-control-lg">
-                {{ wtf.form_field(form.sessions_field) }}
-            </fieldset>
-            <fieldset class="form-control-lg">
-                {{ wtf.form_field(form.duration_field) }}
-            </fieldset>
-            {{ form.recaptcha }}
+            {{ wtf.form_field(form.name_field) }}
+            {{ wtf.form_field(form.sessions_field) }}
+            {{ wtf.form_field(form.duration_field) }}
+            {{ wtf.form_field(form.recaptcha) }}
             {{ form.csrf_token }}
 
             {{ form.submit }}

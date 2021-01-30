@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, SelectField, SubmitField
+from wtforms.validators import DataRequired
 
 
 class CreateForm(FlaskForm):
@@ -19,7 +20,7 @@ class CreateForm(FlaskForm):
     }
 
     name_field = StringField(
-        'Open Space Name'
+        'Open Space Name', [DataRequired()]
     )
     sessions_field = SelectField(
         'Anzahl Sessions', choices=list(sessions_field_options.items())
