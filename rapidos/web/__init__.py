@@ -7,17 +7,18 @@ from rapidos import Container
 from rapidos.config import DevelopmentConfig
 from rapidos.web import views
 from rapidos.web.views import CreateView
-from rapidos.web.views import ServeView
+from rapidos.web.views import MarketplaceView
 
 
 def add_views(flask_app: Flask):
     flask_app.container = create_container()
     CreateView.register(flask_app)
-    ServeView.register(flask_app)
+    MarketplaceView.register(flask_app)
 
 
 def create_container():
     container = Container()
+    # noinspection PyTypeChecker
     container.wire(modules=[views])
     return container
 

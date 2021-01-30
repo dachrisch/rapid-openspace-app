@@ -1,9 +1,11 @@
+from datetime import timedelta, datetime
 from typing import Union, Any
 
 from dependency_injector import providers
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.wiring import Provider
 
+from rapidos.entity import Rapidos
 from rapidos.service import RapidosService
 
 
@@ -12,7 +14,8 @@ class TestingRapidosCreationService(RapidosService):
         super().__init__()
         self.id = id
 
-    def create(self, name: str, duration: int, sessions: int):
+    def create(self, name: str, duration: timedelta, sessions: int):
+        self._instances[self.id] = Rapidos(name, datetime.now(), duration, sessions)
         return self.id
 
 

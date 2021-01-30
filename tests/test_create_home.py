@@ -3,11 +3,11 @@ from unittest import TestCase
 from bs4 import BeautifulSoup
 
 from rapidos.web import create_app
-from rapidos.web.views import CreateForm
+from rapidos.web.forms import CreateForm
 from tests.fixtures import OverridingContainer
 
 
-class TestCreateHomeWeb(TestCase):
+class TestCreateRapidos(TestCase):
 
     def test_homepage(self):
         with create_app().test_client() as client:
