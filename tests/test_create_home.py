@@ -21,9 +21,9 @@ class TestCreateHomeWeb(TestCase):
             self.assertEqual(200, response.status_code)
             soup = BeautifulSoup(response.data, features='lxml')
             form = CreateForm()
-            self._has_input(soup, form.name.id, form.name.label.text)
-            self._has_input(soup, form.count.id, form.count.label.text, _type='select')
-            self._has_input(soup, form.length.id, form.length.label.text, _type='select')
+            self._has_input(soup, form.name_field.id, form.name_field.label.text)
+            self._has_input(soup, form.sessions_field.id, form.sessions_field.label.text, _type='select')
+            self._has_input(soup, form.duration_field.id, form.duration_field.label.text, _type='select')
 
     def test_create_os_uuid_created(self):
         app = create_app()
@@ -33,7 +33,8 @@ class TestCreateHomeWeb(TestCase):
             client.get('/rapidos/create', follow_redirects=False)
 
             form = CreateForm()
-            response = client.post('/rapidos/create', data={form.name.id: 'test', form.count.id: 2, form.length.id: 2,
+            response = client.post('/rapidos/create', data={form.name_field.id: 'test', form.sessions_field.id: 2,
+                                                            form.duration_field.id: 2,
                                                             form.submit.id: form.submit.data,
                                                             form.csrf_token.id: form.csrf_token.current_token})
             self.assertEqual(302, response.status_code)

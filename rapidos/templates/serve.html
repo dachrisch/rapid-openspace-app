@@ -7,12 +7,42 @@
 
 
 {% block content %}
+<!-- Header -->
+<header id="header">
+    <h1><span style="color:#ebc252">b</span><span style="color:black">umbleflies</span></h1>
+</header>
 <!-- Main -->
 <main id="main">
-    <h1><span style="color:#ebc252">b</span><span style="color:black">umbleflies</span></h1>
-    <h3>Willkommen zu deinem Open Space</h3>
-    <img src="/static/images/bumblefly.png">
+    <div class="intro">
+        <h3>Willkommen zum Open Space <i>{{rapidos.name}}</i></h3>
+        <div>
+            <img src="/static/images/calendar.svg" width="40">
+            {{rapidos.start.strftime('%d.%m.%Y %H:%M')}}
+        </div>
+        <div>
+            <img src="/static/images/duration.svg" width="40">
+            {{rapidos.duration_formatted()}}
+        </div>
+        <div>
+            <img src="/static/images/sessions.svg" width="40">
+            {{rapidos.sessions}}
+        </div>
+    </div>
 
+    <div class="grid">
+        <h3>Marktplatz</h3>
+        <table
+                data-toggle="table"
+                data-url="/static/data1.json"
+                id="marketplace">
+            <thead>
+            <tr>
+                <th data-field="slot"></th>
+                <th data-field="topic">Room</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
 
 </main>
 
@@ -39,3 +69,9 @@
 </footer>
 
 {% endblock content %}
+
+{% block scripts %}
+<script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
+<script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+{%- endblock scripts %}

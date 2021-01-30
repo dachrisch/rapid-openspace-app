@@ -3,8 +3,8 @@ import os
 from flask import Flask
 from flask_bootstrap import Bootstrap
 
+from rapidos import Container
 from rapidos.config import DevelopmentConfig
-from rapidos.service import Container
 from rapidos.web import views
 from rapidos.web.views import CreateView
 from rapidos.web.views import ServeView

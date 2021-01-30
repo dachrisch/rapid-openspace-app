@@ -4,14 +4,15 @@ from dependency_injector import providers
 from dependency_injector.containers import DeclarativeContainer
 from dependency_injector.wiring import Provider
 
-from rapidos.service import RapidosCreationService
+from rapidos.service import RapidosService
 
 
-class TestingRapidosCreationService(RapidosCreationService):
+class TestingRapidosCreationService(RapidosService):
     def __init__(self, id=1):
+        super().__init__()
         self.id = id
 
-    def create(self, name: str, count: int, length: int):
+    def create(self, name: str, duration: int, sessions: int):
         return self.id
 
 

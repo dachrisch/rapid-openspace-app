@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from dependency_injector.wiring import inject, Provide
 from flask import render_template, url_for
 from flask_classful import FlaskView, route
@@ -5,15 +7,16 @@ from flask_wtf import FlaskForm, RecaptchaField
 from werkzeug.utils import redirect
 from wtforms import StringField, SelectField, SubmitField
 
-from rapidos.service import Container
-from rapidos.service.create import RapidosCreationService
+from rapidos import Container
+from rapidos.service import RapidosService
 
 
 class ServeView(FlaskView):
     route_base = '/rapidos'
 
-    def index(self, uuid: str):
-        return render_template('serve.html')
+    @inject
+    def index(self, uuid: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
+        return render_template('serve.html', rapidos=rapidos_service.get(uuid))
 
 
 class CreateView(FlaskView):
@@ -21,23 +24,43 @@ class CreateView(FlaskView):
 
     @inject
     @route('/create', methods=('GET', 'POST'))
-    def create(self, creation_service: RapidosCreationService = Provide[Container.creation_service]):
+    def create(self, rapidos_service: RapidosService = Provide[Container.creation_service]):
         form = CreateForm()
         if form.validate_on_submit():
-            rapidos_id = creation_service.create(form.name.data, form.count.data, form.length.data)
+            rapidos_id = rapidos_service.create(form.name_field.data, form.duration_selected(),
+                                                form.sessions_selected())
             return redirect(url_for('ServeView:index', uuid=rapidos_id))
         return render_template('create.html', form=form)
 
 
 class CreateForm(FlaskForm):
-    name = StringField(
+    sessions_field_options = {
+        0: 1,
+        1: 2,
+        2: 3
+    }
+
+    duration_field_options = {
+        0: ('30 Minuten', timedelta(minutes=30)),
+        1: ('45 Minuten', timedelta(minutes=45)),
+        2: ('60 Minuten', timedelta(minutes=60)),
+        3: ('90 Minuten', timedelta(minutes=90)),
+    }
+
+    name_field = StringField(
         'Open Space Name'
     )
-    count = SelectField(
-        'Anzahl Sessions', choices=((1, '1'), (2, '2'))
+    sessions_field = SelectField(
+        'Anzahl Sessions', choices=list(sessions_field_options.items())
     )
-    length = SelectField(
-        'Sessionlänge', choices=((0, '30 Minuten'), (1, '45 Minuten'), (2, '60 Minuten'))
+    duration_field = SelectField(
+        'Sessionlänge', choices=[(entry, label_value[0]) for entry, label_value in duration_field_options.items()]
     )
     recaptcha = RecaptchaField()
     submit = SubmitField('Erstellen')
+
+    def sessions_selected(self):
+        return self.sessions_field_options[int(self.sessions_field.data)]
+
+    def duration_selected(self):
+        return self.duration_field_options[int(self.duration_field.data)][1]
