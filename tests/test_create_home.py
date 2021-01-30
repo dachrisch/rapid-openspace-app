@@ -1,7 +1,7 @@
 from datetime import datetime
 from unittest import TestCase
 
-from bs4 import BeautifulSoup
+from lxml import html
 
 from rapidos.web import create_app
 from rapidos.web.forms import CreateForm
@@ -20,11 +20,11 @@ class TestCreateRapidos(TestCase):
         with create_app().test_client() as client:
             response = client.get('/rapidos/create', follow_redirects=False)
             self.assertEqual(200, response.status_code)
-            soup = BeautifulSoup(response.data, features='lxml')
+            tree = html.document_fromstring(response.data.decode("utf-8"))
             form = CreateForm()
-            self._has_input(soup, form.name_field.id, form.name_field.label.text)
-            self._has_input(soup, form.sessions_field.id, form.sessions_field.label.text, _type='select')
-            self._has_input(soup, form.duration_field.id, form.duration_field.label.text, _type='select')
+            self._has_input(tree, form.name_field.id, form.name_field.label.text)
+            self._has_input(tree, form.sessions_field.id, form.sessions_field.label.text, _type='select')
+            self._has_input(tree, form.duration_field.id, form.duration_field.label.text, _type='select')
 
     def test_create_os_uuid_created(self):
         app = create_app()
@@ -43,8 +43,9 @@ class TestCreateRapidos(TestCase):
             self.assertEqual(302, response.status_code)
             self.assertEqual('http://localhost/rapidos/5/', response.location)
 
-    def _has_input(self, soup, id, label_name, _type='input'):
-        element = soup.find(id=id)
-        self.assertEqual(_type, element.name)
-        label = [i for i in element.previous_siblings][1]
-        self.assertEqual(label_name, label.text)
+    def _has_input(self, tree, id, expected_label_text, _type='input'):
+        element = tree.xpath(f'//{_type}[@id="{id}"]')
+        self.assertIsNotNone(element)
+        label_text = tree.xpath(f'//label[@for="{id}"]/text()')
+        self.assertEqual(1, len(label_text))
+        self.assertEqual(expected_label_text, label_text[0])
