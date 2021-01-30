@@ -14,7 +14,7 @@ class TestingRapidosCreationService(RapidosService):
         super().__init__()
         self.id = id
 
-    def create(self, name: str, duration: timedelta, sessions: int):
+    def create(self, name: str, start, duration: timedelta, sessions: int):
         self._instances[self.id] = Rapidos(name, datetime.now(), duration, sessions)
         return self.id
 

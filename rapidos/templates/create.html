@@ -3,6 +3,7 @@
 {% block styles %}
 <link href='/static/css/bootstrap.min.css' rel="stylesheet">
 <link href='/static/css/main.min.css' rel="stylesheet">
+<link href="/static/css/bootstrap-datetimepicker.css" rel="stylesheet">
 {% endblock styles %}
 
 
@@ -21,6 +22,14 @@
         <div class="form-row">
             {{ wtf.form_errors(form, hiddens="only") }}
             {{ wtf.form_field(form.name_field) }}
+
+            {{ form.start_field.label }}
+
+            <div class="input-append date form_datetime">
+                {{ form.start_field }}
+                <span class="add-on"><i class="icon-th"></i></span>
+            </div>
+
             {{ wtf.form_field(form.sessions_field) }}
             {{ wtf.form_field(form.duration_field) }}
             {{ wtf.form_field(form.recaptcha) }}
@@ -56,3 +65,17 @@
 </footer>
 
 {% endblock content %}
+
+{% block scripts %}
+<script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
+<script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    $(".form_datetime").datetimepicker({
+        format: "dd.mm.yyyy - hh:ii"
+    });
+
+
+</script>
+
+{%- endblock scripts %}

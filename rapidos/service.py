@@ -8,9 +8,9 @@ class RapidosService(object):
     def __init__(self):
         self._instances = {}
 
-    def create(self, name: str, duration: timedelta, sessions: int):
+    def create(self, name: str, start: datetime, duration: timedelta, sessions: int):
         uuid_ = uuid.uuid4()
-        self._instances[uuid_] = Rapidos(name, datetime.now(), duration, sessions)
+        self._instances[uuid_] = Rapidos(name, start, duration, sessions)
         return uuid_
 
     def get(self, uuid_: str):

@@ -1,5 +1,5 @@
 import uuid
-from datetime import timedelta
+from datetime import timedelta, datetime
 from unittest import TestCase
 
 from rapidos.web import create_app
@@ -12,7 +12,7 @@ class TestMarketplace(TestCase):
         app = create_app()
         app.container.override(OverridingContainer())
         app.container.creation_service().id = uuid.uuid4()
-        uuid_ = app.container.creation_service().create('test os', timedelta(minutes=30), 2)
+        uuid_ = app.container.creation_service().create('test os', datetime.now(), timedelta(minutes=30), 2)
         with app.test_client() as client:
             response = client.get(f'/rapidos/{uuid_}/', follow_redirects=False)
 

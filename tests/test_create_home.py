@@ -1,3 +1,4 @@
+from datetime import datetime
 from unittest import TestCase
 
 from bs4 import BeautifulSoup
@@ -36,6 +37,8 @@ class TestCreateRapidos(TestCase):
             response = client.post('/rapidos/create', data={form.name_field.id: 'test', form.sessions_field.id: 2,
                                                             form.duration_field.id: 2,
                                                             form.submit.id: form.submit.data,
+                                                            form.start_field.id: datetime.now().strftime(
+                                                                '%d.%m.%Y - %H:%M'),
                                                             form.csrf_token.id: form.csrf_token.current_token})
             self.assertEqual(302, response.status_code)
             self.assertEqual('http://localhost/rapidos/5/', response.location)
