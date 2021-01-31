@@ -12,7 +12,7 @@ def run_flask():
     app = create_app()
     [print(repr(p)) for p in app.url_map.iter_rules()]
 
-    app.run(debug=True, port=os.getenv('PORT', 5000))
+    app.run(debug=True, port=os.getenv('PORT', 5000))  # lgtm [py/flask-debug]
 
 
 if __name__ == '__main__':
