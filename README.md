@@ -6,12 +6,17 @@ Quickly create an Open Space
 
 Development
 -----------
-[![Last Commit](https://img.shields.io/github/last-commit/dachrisch/spotify_sentiment_classifier)](https://github.com/dachrisch/spotify_sentiment_classifier)
-[![CircleCI](https://img.shields.io/circleci/build/github/dachrisch/spotify_sentiment_classifier)](https://app.circleci.com/pipelines/github/dachrisch/spotify_sentiment_classifier)
-[![Codecov](https://img.shields.io/codecov/c/github/dachrisch/spotify_sentiment_classifier)](https://codecov.io/gh/dachrisch/spotify_sentiment_classifier)
-[![Requires.io](https://img.shields.io/requires/github/dachrisch/spotify_sentiment_classifier)](https://requires.io/github/dachrisch/spotify_sentiment_classifier/requirements)
-[![LGTM Alerts](https://img.shields.io/lgtm/alerts/github/dachrisch/spotify_sentiment_classifier)](https://lgtm.com/projects/g/dachrisch/spotify_sentiment_classifier)
+[![Last Commit](https://img.shields.io/github/last-commit/dachrisch/rapid-openspace-app)](https://github.com/dachrisch/rapid-openspace-app)
+[![CircleCI](https://img.shields.io/circleci/build/github/dachrisch/rapid-openspace-app)](https://app.circleci.com/pipelines/github/dachrisch/rapid-openspace-app)
+[![Codecov](https://img.shields.io/codecov/c/github/dachrisch/rapid-openspace-app)](https://codecov.io/gh/dachrisch/rapid-openspace-app)
+[![Requires.io](https://img.shields.io/requires/github/dachrisch/rapid-openspace-app)](https://requires.io/github/dachrisch/rapid-openspace-app/requirements)
+[![LGTM Alerts](https://img.shields.io/lgtm/alerts/github/dachrisch/rapid-openspace-app)](https://lgtm.com/projects/g/dachrisch/rapid-openspace-app)
 
-* [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/)
+### Configuration
 
+#### recaptcha
+
+For [Recaptcha](https://www.google.com/recaptcha/admin/site/440518893/settings), you need to set the following
+environment parameters
+`RECAPTCHA_PUBLIC_KEY` and `RECAPTCHA_PRIVATE_KEY`
 
