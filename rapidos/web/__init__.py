@@ -1,9 +1,10 @@
 import os
 
-from flask import Flask
+from flask import Flask, Blueprint
 from flask_bootstrap import Bootstrap
 
 from rapidos import Container
+from rapidos.api import api
 from rapidos.config import DevelopmentConfig
 from rapidos.web import views
 from rapidos.web.views import CreateView
@@ -24,7 +25,12 @@ def create_container():
 
 
 def app_api(flask_app: Flask):
-    pass
+    blueprint = Blueprint('api', __name__, url_prefix='/rapidos/api')
+    api.init_app(blueprint)
+    from rapidos.api.endpoints import ns
+    assert ns.name == 'marketplace'
+    flask_app.register_blueprint(blueprint)
+
 
 
 def create_app():

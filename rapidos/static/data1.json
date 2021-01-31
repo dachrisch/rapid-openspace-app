@@ -10,5 +10,9 @@
     {
         "slot": "14:00",
         "topic": "Thema 3"
+    },
+    {
+        "slot": "14:30",
+        "topic": "Thema 4"
     }
 ]
