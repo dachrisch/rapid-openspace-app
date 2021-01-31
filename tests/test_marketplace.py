@@ -14,7 +14,7 @@ class TestMarketplace(TestCase):
         app.container.creation_service().id = uuid.uuid4()
         uuid_ = app.container.creation_service().create('test os', datetime.now(), timedelta(minutes=30), 2)
         with app.test_client() as client:
-            response = client.get(f'/rapidos/{uuid_}/', follow_redirects=False)
+            response = client.get(f'/rapidos/marketplace/{uuid_}', follow_redirects=False)
 
             self.assertEqual(200, response.status_code)
             self.assertIn(b'<h3>Willkommen zum Open Space', response.data)

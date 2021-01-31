@@ -12,7 +12,8 @@ class MarketplaceView(FlaskView):
     route_base = '/rapidos'
 
     @inject
-    def index(self, uuid: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
+    @route('/marketplace/<uuid>')
+    def marketplace(self, uuid: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
         return render_template('marketplace.html', rapidos=rapidos_service.get(uuid))
 
 
@@ -26,7 +27,7 @@ class CreateView(FlaskView):
         if form.validate_on_submit():
             rapidos_id = rapidos_service.create(form.name_field.data, form.start_datetime(), form.duration_selected(),
                                                 form.sessions_selected())
-            return redirect(url_for('MarketplaceView:index', uuid=rapidos_id))
+            return redirect(url_for('MarketplaceView:marketplace', uuid=rapidos_id))
         return render_template('create.html', form=form)
 
 

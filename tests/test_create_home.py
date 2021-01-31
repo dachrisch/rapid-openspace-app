@@ -41,7 +41,7 @@ class TestCreateRapidos(TestCase):
                                                                 '%d.%m.%Y - %H:%M'),
                                                             form.csrf_token.id: form.csrf_token.current_token})
             self.assertEqual(302, response.status_code)
-            self.assertEqual('http://localhost/rapidos/5/', response.location)
+            self.assertEqual('http://localhost/rapidos/marketplace/5', response.location)
 
     def _has_input(self, tree, id, expected_label_text, _type='input'):
         element = tree.xpath(f'//{_type}[@id="{id}"]')
