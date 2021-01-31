@@ -4,3 +4,4 @@ Flask-Classful
 flask_wtf
 waitress
 dependency-injector
+flask_restx

@@ -14,7 +14,7 @@ class MarketplaceView(FlaskView):
     @inject
     @route('/marketplace/<uuid>')
     def marketplace(self, uuid: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
-        return render_template('marketplace.html', rapidos=rapidos_service.get(uuid))
+        return render_template('marketplace.html', uuid=uuid, rapidos=rapidos_service.get(uuid))
 
 
 class CreateView(FlaskView):
