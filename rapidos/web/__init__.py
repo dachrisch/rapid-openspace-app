@@ -7,14 +7,12 @@ from rapidos import Container
 from rapidos.api import api
 from rapidos.config import DevelopmentConfig
 from rapidos.web import views
-from rapidos.web.views import CreateView
-from rapidos.web.views import MarketplaceView
+from rapidos.web.views import RapidosView
 
 
 def add_views(flask_app: Flask):
     flask_app.container = create_container()
-    CreateView.register(flask_app)
-    MarketplaceView.register(flask_app)
+    RapidosView.register(flask_app)
 
 
 def create_container():

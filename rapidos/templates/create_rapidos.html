@@ -18,7 +18,7 @@
     <img src="/static/images/bumblefly.png">
 
 
-    <form action="{{ url_for('CreateView:create') }}" class="no-padding" id="create_form" method="post">
+    <form action="{{ url_for('RapidosView:create') }}" class="no-padding" id="create_form" method="post">
         <div class="form-row">
             {{ wtf.form_errors(form, hiddens="only") }}
             {{ wtf.form_field(form.name_field) }}

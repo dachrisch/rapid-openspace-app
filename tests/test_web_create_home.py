@@ -38,7 +38,7 @@ class TestCreateRapidos(TestCase):
                                                                 '%d.%m.%Y - %H:%M'),
                                                             form.csrf_token.id: form.csrf_token.current_token})
             self.assertEqual(302, response.status_code)
-            self.assertRegex(response.location, 'http://localhost/rapidos/marketplace/\w+-\w+-\w+-\w+')
+            self.assertRegex(response.location, 'http://localhost/rapidos/\w+-\w+-\w+-\w+')
 
     def _has_input(self, tree, id, expected_label_text, _type='input'):
         element = tree.xpath(f'//{_type}[@id="{id}"]')
