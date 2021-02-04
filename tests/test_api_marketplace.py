@@ -6,7 +6,7 @@ from rapidos.web import create_app
 
 class TestApiMarketplace(TestCase):
 
-    def test_api_marketplace(self):
+    def test_get_marketplace_by_id(self):
         app = create_app()
         with app.test_client() as client:
             response = client.get(f'rapidos/api/marketplace/5')

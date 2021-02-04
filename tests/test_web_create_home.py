@@ -5,7 +5,6 @@ from lxml import html
 
 from rapidos.web import create_app
 from rapidos.web.forms import CreateForm
-from tests.fixtures import OverridingContainer
 
 
 class TestCreateRapidos(TestCase):
@@ -28,8 +27,6 @@ class TestCreateRapidos(TestCase):
 
     def test_create_os_uuid_created(self):
         app = create_app()
-        app.container.override(OverridingContainer())
-        app.container.creation_service().id = 5
         with app.test_client() as client:
             client.get('/rapidos/create', follow_redirects=False)
 
@@ -41,7 +38,7 @@ class TestCreateRapidos(TestCase):
                                                                 '%d.%m.%Y - %H:%M'),
                                                             form.csrf_token.id: form.csrf_token.current_token})
             self.assertEqual(302, response.status_code)
-            self.assertEqual('http://localhost/rapidos/marketplace/5', response.location)
+            self.assertRegex(response.location, 'http://localhost/rapidos/marketplace/\w+-\w+-\w+-\w+')
 
     def _has_input(self, tree, id, expected_label_text, _type='input'):
         element = tree.xpath(f'//{_type}[@id="{id}"]')

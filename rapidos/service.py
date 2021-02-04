@@ -10,7 +10,11 @@ class RapidosService(object):
 
     def create(self, name: str, start: datetime, duration: timedelta, sessions: int):
         uuid_ = uuid.uuid4()
-        self._instances[uuid_] = Rapidos(name, start, duration, sessions)
+        rapidos = Rapidos(name)
+        self._instances[uuid_] = rapidos
+        rapidos.add_room(name)
+        for slot_number in range(sessions):
+            rapidos.add_slot(start + duration * slot_number)
         return uuid_
 
     def get(self, uuid_: str):
