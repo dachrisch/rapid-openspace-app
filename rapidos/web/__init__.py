@@ -23,10 +23,10 @@ def create_container():
 
 
 def app_api(flask_app: Flask):
-    blueprint = Blueprint('api', __name__, url_prefix='/rapidos/api')
+    blueprint = Blueprint('api', __name__, url_prefix='/api')
     api.init_app(blueprint)
     from rapidos.api.endpoints import ns
-    assert ns.name == 'marketplace'
+    assert ns.name == 'rapidos'
     flask_app.register_blueprint(blueprint)
 
 
