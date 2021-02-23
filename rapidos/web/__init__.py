@@ -26,7 +26,7 @@ def app_api(flask_app: Flask):
     blueprint = Blueprint('api', __name__, url_prefix='/api')
     api.init_app(blueprint)
     from rapidos.api.endpoints import ns
-    assert ns.name == 'rapidos'
+    assert ns.name == 'v1'
     flask_app.register_blueprint(blueprint)
 
 
