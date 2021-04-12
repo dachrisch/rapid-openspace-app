@@ -4,7 +4,7 @@ from flask import Flask, Blueprint
 from flask_bootstrap import Bootstrap
 
 from rapidos import Container
-from rapidos.api import api
+from rapidos.api import api, endpoints
 from rapidos.config import DevelopmentConfig
 from rapidos.web import views
 from rapidos.web.views import RapidosView
@@ -18,7 +18,7 @@ def add_views(flask_app: Flask):
 def create_container():
     container = Container()
     # noinspection PyTypeChecker
-    container.wire(modules=[views])
+    container.wire(modules=[views, endpoints])
     return container
 
 

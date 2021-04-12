@@ -15,7 +15,6 @@ class RapidosView(FlaskView):
     def rapidos(self, uuid: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
         return render_template('rapidos.html', uuid=uuid, rapidos=rapidos_service.get(uuid))
 
-
     @inject
     @route('/create', methods=('GET', 'POST'))
     def create(self, rapidos_service: RapidosService = Provide[Container.creation_service]):
@@ -25,5 +24,3 @@ class RapidosView(FlaskView):
                                                 form.sessions_selected())
             return redirect(url_for('RapidosView:rapidos', uuid=rapidos_id))
         return render_template('create_rapidos.html', form=form)
-
-
