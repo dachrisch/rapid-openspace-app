@@ -11,15 +11,14 @@ from rapidos.web.views import RapidosView
 
 
 def add_views(flask_app: Flask):
-    flask_app.container = create_container()
     RapidosView.register(flask_app)
 
 
-def create_container():
+def create_container(flask_app):
     container = Container()
     # noinspection PyTypeChecker
     container.wire(modules=[views, endpoints])
-    return container
+    flask_app.container = container
 
 
 def app_api(flask_app: Flask):
@@ -30,13 +29,14 @@ def app_api(flask_app: Flask):
     flask_app.register_blueprint(blueprint)
 
 
-
 def create_app():
     flask_app = Flask(__name__, template_folder='../templates', static_folder='../static')
 
     flask_app.secret_key = os.getenv('FLASK_SECRET_KEY', os.urandom(24))
 
     configure_app(flask_app)
+    create_container(flask_app)
+
     add_views(flask_app)
 
     app_api(flask_app)
