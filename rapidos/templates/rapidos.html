@@ -67,7 +67,7 @@
 <script>
     function ajaxRequest(params) {
     let uuid = $('#marketplace').attr('data-uuid')
-    var url = `/rapidos/api/marketplace/${uuid}`
+    var url = `/api/rapidos/${uuid}`
     $.get(url).then(function (res) {
       params.success(res)
     })

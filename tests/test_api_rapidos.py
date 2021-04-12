@@ -1,13 +1,26 @@
+import uuid
 from datetime import datetime, timedelta
 from unittest import TestCase
 
+import pytest as pytest
+
 from rapidos import RapidosService
+from rapidos.service import UUIDGenerator
 from rapidos.web import create_app
 
 
+class MockIdGenerator(UUIDGenerator):
+
+    def __init__(self, id_: str):
+        self.id_ = id_
+
+    def new_id(self) -> str:
+        return self.id_
+
+
 class CreationServiceMock(RapidosService):
-    def create(self, name: str, start: datetime, duration: timedelta, sessions: int):
-        return '5678'
+    def __init__(self, id_: str):
+        super().__init__(MockIdGenerator(id_))
 
 
 class TestRapidosApi(TestCase):
@@ -20,17 +33,34 @@ class TestRapidosApi(TestCase):
 
     def test_create_rapidos(self):
         with self.app.test_client() as client:
-            found_rule = filter(lambda rule: rule.rule == '/api/v1/rapidos', self.app.url_map.iter_rules())
+            found_rule = filter(lambda rule: rule.rule == '/api/rapidos/', self.app.url_map.iter_rules())
             self.assertEqual(1, len(list(found_rule)))
 
             expected_rapidos = {'name': 'Test Open Space', 'start': datetime(2021, 3, 2, 20).isoformat(),
                                 'duration': 60,
                                 'sessions': 2}
 
-            with self.app.container.creation_service.override(CreationServiceMock()):
-                response = client.post('/api/v1/rapidos',
-                                       json=expected_rapidos)
+            with self.app.container.creation_service.override(CreationServiceMock('5678')):
+                response = client.post('/api/rapidos/', json=expected_rapidos)
                 self.assertEqual(201, response.status_code, response)
-
                 expected_rapidos['id'] = '5678'
+                self.assertEqual(expected_rapidos, response.json)
+
+    @pytest.mark.xfail
+    def test_get_rapidos(self):
+        with self.app.test_client() as client:
+            expected_date = datetime(2021, 3, 2, 20)
+            expected_rapidos = {'name': 'Test Open Space', 'start': expected_date.isoformat(),
+                                'duration': 60,
+                                'sessions': 2}
+
+            uuid_ = str(uuid.uuid4())
+            service_mock = CreationServiceMock(uuid_)
+
+            service_mock.create(expected_rapidos['name'], expected_date,
+                                timedelta(minutes=expected_rapidos['duration']), expected_rapidos['sessions'])
+            with self.app.container.creation_service.override(service_mock):
+                response = client.get(f'/api/rapidos/{uuid_}')
+                self.assertEqual(200, response.status_code, response)
+
                 self.assertEqual(expected_rapidos, response.json)

@@ -7,7 +7,7 @@ from flask_restx.fields import String, DateTime, Integer
 from rapidos import RapidosService, Container
 from rapidos.api import api
 
-ns = api.namespace('v1')
+ns = api.namespace('rapidos')
 
 rapidos_model = api.model('Rapidos',
                           {
@@ -19,8 +19,8 @@ rapidos_model = api.model('Rapidos',
                           )
 
 
-@ns.route('/rapidos')
-class RapidosResource(Resource):
+@ns.route('/')
+class RapidosResourceList(Resource):
     @inject
     @ns.expect(rapidos_model, validate=True)
     @ns.marshal_with(rapidos_model)
@@ -37,3 +37,11 @@ class RapidosResource(Resource):
                    'duration': duration.total_seconds() / 60,
                    'sessions': sessions
                }, 201
+
+
+@ns.route('/<uuid>')
+@ns.param('id', 'Rapidos identifier')
+class RapidosResource(Resource):
+    @ns.marshal_with(rapidos_model)
+    def get(self, uuid: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
+        return rapidos_service.get(uuid)

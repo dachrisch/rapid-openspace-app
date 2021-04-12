@@ -4,12 +4,18 @@ from datetime import datetime, timedelta
 from rapidos.entity import Rapidos
 
 
+class UUIDGenerator(object):
+    def new_id(self) -> str:
+        return str(uuid.uuid4())
+
+
 class RapidosService(object):
-    def __init__(self):
+    def __init__(self, id_generator: UUIDGenerator):
+        self.id_generator = id_generator
         self._instances = {}
 
     def create(self, name: str, start: datetime, duration: timedelta, sessions: int):
-        uuid_ = uuid.uuid4()
+        uuid_ = self.id_generator.new_id()
         rapidos = Rapidos(name)
         self._instances[uuid_] = rapidos
         rapidos.add_room(name)
@@ -18,4 +24,4 @@ class RapidosService(object):
         return uuid_
 
     def get(self, uuid_: str):
-        return self._instances[uuid.UUID(uuid_)]
+        return self._instances[uuid_]
