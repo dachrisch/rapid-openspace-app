@@ -29,14 +29,8 @@ class RapidosResourceList(Resource):
         start = datetime.fromisoformat(api.payload.get('start'))
         duration = timedelta(minutes=int(api.payload.get('duration')))
         sessions = api.payload.get('sessions', 1)
-        uuid = rapidos_service.create(name, start, duration, sessions)
-        return {
-                   'id': uuid,
-                   'name': name,
-                   'start': start,
-                   'duration': duration.total_seconds() / 60,
-                   'sessions': sessions
-               }, 201
+        rapidos = rapidos_service.create(name, start, duration, sessions)
+        return rapidos, 201
 
 
 @ns.route('/<uuid>')

@@ -46,15 +46,15 @@ class TestRapidosApi(TestCase):
                 expected_rapidos['id'] = '5678'
                 self.assertEqual(expected_rapidos, response.json)
 
-    @pytest.mark.xfail
     def test_get_rapidos(self):
         with self.app.test_client() as client:
             expected_date = datetime(2021, 3, 2, 20)
+            uuid_ = str(uuid.uuid4())
             expected_rapidos = {'name': 'Test Open Space', 'start': expected_date.isoformat(),
+                                'id':uuid_,
                                 'duration': 60,
                                 'sessions': 2}
 
-            uuid_ = str(uuid.uuid4())
             service_mock = CreationServiceMock(uuid_)
 
             service_mock.create(expected_rapidos['name'], expected_date,

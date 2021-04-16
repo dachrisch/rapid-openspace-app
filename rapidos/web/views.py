@@ -20,7 +20,7 @@ class RapidosView(FlaskView):
     def create(self, rapidos_service: RapidosService = Provide[Container.creation_service]):
         form = CreateForm()
         if form.validate_on_submit():
-            rapidos_id = rapidos_service.create(form.name_field.data, form.start_datetime(), form.duration_selected(),
+            rapidos = rapidos_service.create(form.name_field.data, form.start_datetime(), form.duration_selected(),
                                                 form.sessions_selected())
-            return redirect(url_for('RapidosView:rapidos', uuid=rapidos_id))
+            return redirect(url_for('RapidosView:rapidos', uuid=rapidos.id))
         return render_template('create_rapidos.html', form=form)

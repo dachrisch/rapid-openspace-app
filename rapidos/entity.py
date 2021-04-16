@@ -1,14 +1,14 @@
+from datetime import datetime, timedelta
+
+
 class Rapidos(object):
-    def __init__(self, name: str):
+    def __init__(self, _id: str, name: str, start: datetime, duration: timedelta, sessions: int):
+        self.id = _id
+        self.sessions = sessions
+        self._duration = duration
+        self.start = start
         self.name = name
-        self.rooms = []
-        self.slots = []
 
-    def duration_formatted(self):
-        return 'TODO'
-
-    def add_room(self, room_name: str):
-        self.rooms.append(room_name)
-
-    def add_slot(self, slot_start_time):
-        self.slots.append(slot_start_time)
+    @property
+    def duration(self) -> int:
+        return int(self._duration.total_seconds() / 60)
