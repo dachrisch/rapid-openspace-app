@@ -6,6 +6,7 @@ from flask_restx.fields import String, DateTime, Integer
 
 from rapidos import RapidosService, Container
 from rapidos.api import api
+from rapidos.entity import Room
 
 ns = api.namespace('rapidos')
 
@@ -18,6 +19,10 @@ rapidos_model = api.model('Rapidos',
                               'sessions': Integer(required=True)}
                           )
 
+room_model = api.model('Rooms',
+                       {
+                           'name': String(required=True)
+                       })
 
 @ns.route('/')
 class RapidosResourceList(Resource):
@@ -39,3 +44,13 @@ class RapidosResource(Resource):
     @ns.marshal_with(rapidos_model)
     def get(self, uuid: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
         return rapidos_service.get(uuid)
+
+@ns.route('/<uuid>/rooms')
+@ns.param('id', 'Rapidos identifier')
+class RoomsResource(Resource):
+    @ns.expect(room_model)
+    @ns.marshal_with(room_model)
+    def post(self, uuid: str):
+        name = api.payload.get('name')
+        room = Room(name)
+        return room, 201

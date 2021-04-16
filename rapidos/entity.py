@@ -12,3 +12,8 @@ class Rapidos(object):
     @property
     def duration(self) -> int:
         return int(self._duration.total_seconds() / 60)
+
+
+class Room(object):
+    def __init__(self, name: str):
+        self.name = name

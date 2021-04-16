@@ -64,3 +64,20 @@ class TestRapidosApi(TestCase):
                 self.assertEqual(200, response.status_code, response)
 
                 self.assertEqual(expected_rapidos, response.json)
+
+class TestRapidosRoomApi(TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        # XXX: workaround, cause API lazy init is not working correctly
+        # when app is created for every test, so creating one app for all tests
+        cls.app = create_app()
+
+    def test_create_room(self):
+        with self.app.test_client() as client:
+            expected_json = {
+                'name': 'test room',
+            }
+            uuid_ = str(uuid.uuid4())
+            response = client.post(f'/api/rapidos/1/rooms', json=expected_json)
+            self.assertEqual(201, response.status_code, response)
+            self.assertEqual({'name': 'test room'}, response.json)
