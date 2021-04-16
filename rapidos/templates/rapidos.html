@@ -21,6 +21,13 @@
 
     <div class="grid">
         <h3>Marktplatz</h3>
+        <ul>
+            <li>Start: {{ rapidos.start }}</li>
+            <li>Sessionlänge: {{ rapidos.duration }}</li>
+            <li>Sessions: {{ rapidos.sessions }}</li>
+        </ul>
+
+
         <table
                 id="marketplace"
                 data-uuid="{{ rapidos.id }}"
@@ -76,3 +83,4 @@
 
 </script>
 {%- endblock scripts %}
+
