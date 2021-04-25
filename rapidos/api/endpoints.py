@@ -21,8 +21,10 @@ rapidos_model = api.model('Rapidos',
 
 room_model = api.model('Rooms',
                        {
+                           'id': String(readonly=True),
                            'name': String(required=True)
                        })
+
 
 @ns.route('/')
 class RapidosResourceList(Resource):
@@ -45,12 +47,13 @@ class RapidosResource(Resource):
     def get(self, uuid: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
         return rapidos_service.get(uuid)
 
-@ns.route('/<uuid>/rooms')
+
+@ns.route('/<rapidos_id>/rooms')
 @ns.param('id', 'Rapidos identifier')
 class RoomsResource(Resource):
     @ns.expect(room_model)
     @ns.marshal_with(room_model)
-    def post(self, uuid: str):
+    def post(self, rapidos_id: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
         name = api.payload.get('name')
-        room = Room(name)
+        room = rapidos_service.add_room(name).to(rapidos_id)
         return room, 201

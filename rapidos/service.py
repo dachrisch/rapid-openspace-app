@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timedelta
 
-from rapidos.entity import Rapidos
+from rapidos.entity import Rapidos, Room
 
 
 class UUIDGenerator(object):
@@ -20,5 +20,19 @@ class RapidosService(object):
         self._instances[uuid_] = rapidos
         return rapidos
 
-    def get(self, uuid_: str):
+    def get(self, uuid_: str) -> Rapidos:
         return self._instances[uuid_]
+
+    def add_room(self, name):
+        return RoomBuilder(self, name)
+
+
+class RoomBuilder(object):
+    def __init__(self, rapidos_service: RapidosService, name):
+        self.rapidos_service = rapidos_service
+        self.name = name
+
+    def to(self, rapidos_id: str) -> Room:
+        room = Room(self.rapidos_service.id_generator.new_id(), self.name)
+        self.rapidos_service.get(rapidos_id).add_room(room)
+        return room

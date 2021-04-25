@@ -2,8 +2,6 @@ import uuid
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-import pytest as pytest
-
 from rapidos import RapidosService
 from rapidos.service import UUIDGenerator
 from rapidos.web import create_app
@@ -51,7 +49,7 @@ class TestRapidosApi(TestCase):
             expected_date = datetime(2021, 3, 2, 20)
             uuid_ = str(uuid.uuid4())
             expected_rapidos = {'name': 'Test Open Space', 'start': expected_date.isoformat(),
-                                'id':uuid_,
+                                'id': uuid_,
                                 'duration': 60,
                                 'sessions': 2}
 
@@ -64,6 +62,7 @@ class TestRapidosApi(TestCase):
                 self.assertEqual(200, response.status_code, response)
 
                 self.assertEqual(expected_rapidos, response.json)
+
 
 class TestRapidosRoomApi(TestCase):
     @classmethod
@@ -78,6 +77,10 @@ class TestRapidosRoomApi(TestCase):
                 'name': 'test room',
             }
             uuid_ = str(uuid.uuid4())
-            response = client.post(f'/api/rapidos/1/rooms', json=expected_json)
+            service_mock = CreationServiceMock(uuid_)
+
+            service_mock.create('Test Rapidos', datetime(2021, 4, 1), timedelta(minutes=30), 1)
+            with self.app.container.creation_service.override(service_mock):
+                response = client.post(f'/api/rapidos/{uuid_}/rooms', json=expected_json)
             self.assertEqual(201, response.status_code, response)
-            self.assertEqual({'name': 'test room'}, response.json)
+            self.assertEqual({'id': uuid_, 'name': 'test room'}, response.json)
