@@ -51,6 +51,11 @@ jobs:
           command: |
             . venv/bin/activate
             pytest --junitxml=test-reports/test-results.xml --cov=rapidos --cov-report=xml --cov-report=html tests
+      - run:
+          name: run integration tests
+          command: |
+            . venv/bin/activate
+            pytest --junitxml=test-reports/integration_test-results.xml integration_tests
 
       - store_test_results:
           path: test-reports
