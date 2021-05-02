@@ -21,13 +21,15 @@ class CreationServiceMock(RapidosService):
         super().__init__(MockIdGenerator(id_))
 
 
-class TestRapidosApi(TestCase):
-
+class RapidosApiTestBase(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # XXX: workaround, cause API lazy init is not working correctly
         # when app is created for every test, so creating one app for all tests
         cls.app = create_app()
+
+
+class TestRapidosApi(RapidosApiTestBase):
 
     def test_create_rapidos(self):
         with self.app.test_client() as client:
@@ -64,23 +66,18 @@ class TestRapidosApi(TestCase):
                 self.assertEqual(expected_rapidos, response.json)
 
 
-class TestRapidosRoomApi(TestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        # XXX: workaround, cause API lazy init is not working correctly
-        # when app is created for every test, so creating one app for all tests
-        cls.app = create_app()
+class TestSessionLocationApi(RapidosApiTestBase):
 
-    def test_create_room(self):
+    def test_create_location(self):
         with self.app.test_client() as client:
             expected_json = {
-                'name': 'test room',
+                'name': 'test location',
             }
             uuid_ = str(uuid.uuid4())
             service_mock = CreationServiceMock(uuid_)
 
             service_mock.create('Test Rapidos', datetime(2021, 4, 1), timedelta(minutes=30), 1)
             with self.app.container.creation_service.override(service_mock):
-                response = client.post(f'/api/rapidos/{uuid_}/rooms', json=expected_json)
+                response = client.post(f'/api/rapidos/{uuid_}/locations', json=expected_json)
             self.assertEqual(201, response.status_code, response)
-            self.assertEqual({'id': uuid_, 'name': 'test room'}, response.json)
+            self.assertEqual({'id': uuid_, 'name': 'test location'}, response.json)

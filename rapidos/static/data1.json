@@ -1,18 +1,18 @@
 [
-    {
-        "slot": "13:00",
-        "topic": "Thema 1"
-    },
-    {
-        "slot": "13:30",
-        "topic": "Thema 2"
-    },
-    {
-        "slot": "14:00",
-        "topic": "Thema 3"
-    },
-    {
-        "slot": "14:30",
-        "topic": "Thema 4"
-    }
+  {
+    "slot": "13:00",
+    "topic": "Thema 1"
+  },
+  {
+    "slot": "13:30",
+    "topic": "Thema 2"
+  },
+  {
+    "slot": "14:00",
+    "topic": "Thema 3"
+  },
+  {
+    "slot": "14:30",
+    "topic": "Thema 4"
+  }
 ]

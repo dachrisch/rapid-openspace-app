@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 
-class Room(object):
+class SessionLocation(object):
     def __init__(self, _id: str, name: str):
         self.name = name
         self.id = _id
@@ -19,5 +19,5 @@ class Rapidos(object):
     def duration(self) -> int:
         return int(self._duration.total_seconds() / 60)
 
-    def add_room(self, room: Room):
+    def add_session_location(self, session_location: SessionLocation):
         pass
