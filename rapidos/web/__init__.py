@@ -21,12 +21,25 @@ def create_container(flask_app):
     flask_app.container = container
 
 
-def app_api(flask_app: Flask):
+def add_api(flask_app: Flask):
     blueprint = Blueprint('api', __name__, url_prefix='/api')
     api.init_app(blueprint)
     from rapidos.api.endpoints import ns
     assert ns.name == 'rapidos'
     flask_app.register_blueprint(blueprint)
+
+
+def add_monitoring(flask_app):
+    def shutdown_server():
+        from flask import request
+        shutdown = request.environ.get('werkzeug.server.shutdown')
+        if shutdown is None:
+            raise RuntimeError('Not running with the Werkzeug Server')
+        shutdown()
+        return 'server shutdown', 503
+
+    flask_app.add_url_rule('/shutdown', 'shutdown', shutdown_server)
+    flask_app.add_url_rule('/ping', 'ping', lambda: 'pong')
 
 
 def create_app():
@@ -38,8 +51,8 @@ def create_app():
     create_container(flask_app)
 
     add_views(flask_app)
-
-    app_api(flask_app)
+    add_api(flask_app)
+    add_monitoring(flask_app)
 
     Bootstrap(flask_app)
 

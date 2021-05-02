@@ -1,12 +1,14 @@
+import shlex
+import time
 from datetime import datetime
-from multiprocessing import Process
+from subprocess import Popen, STDOUT, PIPE
 from unittest import TestCase
 
 import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.select import Select
-
+from requests.exceptions import ConnectionError
 from rapidos.web import create_app
 
 
@@ -16,14 +18,23 @@ class TestCreateRapidosIntegration(TestCase):
         options.add_argument('--headless')
         self.driver = webdriver.Chrome(options=options)
         self.app = create_app()
-        self.server = Process(target=self.app.run)
-        self.server.start()
 
         self.base_url = 'http://127.0.0.1:5000'
 
+        self.server = Popen(shlex.split('python -m app'), stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+        for tries in range(10):
+            time.sleep(.1 * tries)
+            try:
+                response = requests.get(f'{self.base_url}/ping')
+                if 200 == response.status_code:
+                    break
+            except ConnectionError:
+                time.sleep(1)
+
     def tearDown(self) -> None:
+        requests.get(f'{self.base_url}/shutdown')
+        self.server.wait(timeout=5)
         self.server.terminate()
-        self.server.join(timeout=10)
 
     def test_create_single_rapidos(self):
         self.driver.get(f'{self.base_url}/rapidos/create')
