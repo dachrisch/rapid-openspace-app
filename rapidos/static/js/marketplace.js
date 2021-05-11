@@ -1,18 +1,24 @@
-var addPanel = function (location_name, location_id){
-    console.log('addPanel  ' + location_name)
-    var myCol = $('<div class="col-sm-3 col-md-3 pb-2"></div>');
-    var myPanel = $('<div class="card card-outline-info" id="'+location_name+'Panel"><div class="card-block"><div class="card-title"><span>Location #'+location_name+'</span><button type="button" class="close" data-target="#'+location_name+'Panel" data-dismiss="alert"><span class="float-right"><i class="fa fa-remove"></i></span></button></div><p>'+location_id+' </p><img src="/static/images/placeholder.svg" class="rounded rounded-circle"></div></div>');
-    myPanel.appendTo(myCol);
-    myCol.appendTo('#contentPanel');
+
+var addColumn = function (location_name, location_id) {
+    console.log('add location ' + location_name);
+    var th_loc_id = 'loc_' + location_id
+    var column = $('<th class="location" id="'+th_loc_id+'">' + location_name + '</th>')
+    var close_button = $('<button type="button" class="close" data-target="#'+th_loc_id+'" data-dismiss="alert"><span class="float-right"><i class="fa fa-remove"></i></span></button>')
+    close_button.appendTo(column)
+    column.appendTo('#marketplace_locations')
     $('.close').on('click', function(e){
-      e.stopPropagation();
-          var $target = $(this).parents('.col-sm-3');
-          $target.hide('slow', function(){
+        e.stopPropagation();
+        var $target = $(this).parents('.location');
+        console.log('remove location ' + $target[0].id)
+        $target.hide('slow', function(){
             $target.remove();
-          });
+            deleteLocation($target[0].id)
+        });
     });
 };
-
+var deleteLocation = function (location_id){
+        console.log('deleted location ' +location_id)
+};
 var createLocation = function (rapidos_id, location_name){
     let url = `/api/rapidos/${rapidos_id}/locations`
     $.ajax({
@@ -20,9 +26,8 @@ var createLocation = function (rapidos_id, location_name){
       url: url,
       data: JSON.stringify({'name' : location_name}),
       success: function(res) {
-        addPanel(res['name'], res['id'])
-
-        console.log(res)
+        addColumn(res['name'], res['id'])
+        console.log('created location ' + res['name'] +', ' + res['id'])
       },
       contentType: "application/json",
       dataType: "json"
