@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from typing import Dict
 
 
 class SessionLocation(object):
@@ -14,10 +15,11 @@ class Rapidos(object):
         self._duration = duration
         self.start = start
         self.name = name
+        self.locations = set()
 
     @property
     def duration(self) -> int:
         return int(self._duration.total_seconds() / 60)
 
     def add_session_location(self, session_location: SessionLocation):
-        pass
+        self.locations.add(session_location)

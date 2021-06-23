@@ -5,10 +5,11 @@ from subprocess import Popen, STDOUT, PIPE
 from unittest import TestCase
 
 import requests
+from requests.exceptions import ConnectionError
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.select import Select
-from requests.exceptions import ConnectionError
+
 from rapidos.web import create_app
 
 
@@ -55,19 +56,22 @@ class TestCreateRapidosIntegration(TestCase):
         self.assertRegex(text, '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}')
 
     def test_create_a_location(self):
+        created_rapidos = requests.post(f'{self.base_url}/api/rapidos/',
+                                        json={'name': 'Test Open Space', 'start': datetime(2021, 3, 2, 20).isoformat(),
+                                              'duration': 60,
+                                              'sessions': 2})
+
+        self.assertEqual(201, created_rapidos.status_code)
+        rapidos_id = created_rapidos.json()['id']
+
         self.driver.get(f'{self.base_url}/rapidos/create')
-        response = requests.post(f'{self.base_url}/api/rapidos/',
-                                 json={'name': 'Test Open Space', 'start': datetime(2021, 3, 2, 20).isoformat(),
-                                       'duration': 60,
-                                       'sessions': 2})
-
-        self.assertEqual(201, response.status_code)
-        rapidos_id = response.json()['id']
-
         self.driver.get(f'{self.base_url}/rapidos/{rapidos_id}')
         self.driver.find_element_by_id('session_location').send_keys('Test Location')
-        self.driver.find_element_by_id('add_session_button').click()
+        self.driver.find_element_by_id('add_location_button').click()
 
-        location_panel_text = self.driver.find_element_by_id('Test LocationPanel').text.split('\n')
-        self.assertEqual('Location #Test Location', location_panel_text[0])
-        self._is_uuid_format(location_panel_text[1])
+        rapidos_locations = requests.get(f'{self.base_url}/api/rapidos/{rapidos_id}/locations')
+        self.assertEqual(200, rapidos_locations.status_code)
+        location_id = rapidos_locations.json()[0]['id']
+
+        location_panel_text = self.driver.find_element_by_id(f'loc_{location_id}').text.split('\n')
+        self.assertEqual('Test Location', location_panel_text[0])

@@ -34,7 +34,7 @@ var createLocation = function (rapidos_id, location_name){
     });
 }
 
-$('#add_session_button').click(function() {
+$('#add_location_button').click(function() {
     let s_location = $('#session_location').val()
     let rapidos_id = $('#rapidos_id').val()
 

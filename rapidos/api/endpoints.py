@@ -26,7 +26,7 @@ locations_model = api.model('Session Locations',
 
 
 @ns.route('/')
-class RapidosResourceList(Resource):
+class RapidosListResource(Resource):
     @inject
     @ns.expect(rapidos_model, validate=True)
     @ns.marshal_with(rapidos_model)
@@ -49,9 +49,23 @@ class RapidosResource(Resource):
 
 @ns.route('/<rapidos_id>/locations')
 @ns.param('id', 'Rapidos identifier')
-class SessionLocationsResource(Resource):
+class SessionLocationListResource(Resource):
     @ns.expect(locations_model)
     @ns.marshal_with(locations_model)
     def post(self, rapidos_id: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
         name = api.payload.get('name')
         return rapidos_service.add_session_location(name).to(rapidos_id), 201
+
+    @ns.marshal_list_with(locations_model)
+    def get(self, rapidos_id: str, rapidos_service: RapidosService = Provide[Container.creation_service]):
+        return list(rapidos_service.get_session_locations().of(rapidos_id))
+
+
+@ns.route('/<rapidos_id>/locations/<location_id>')
+@ns.param('id', 'Rapidos identifier')
+class SessionLocationResource(Resource):
+    @ns.marshal_with(locations_model)
+    def get(self, rapidos_id: str, location_id: str,
+            rapidos_service: RapidosService = Provide[Container.creation_service]):
+        return next(
+            filter(lambda location: location.id == location_id, rapidos_service.get_session_locations().of(rapidos_id)))

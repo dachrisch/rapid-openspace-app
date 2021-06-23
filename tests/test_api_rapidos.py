@@ -2,23 +2,8 @@ import uuid
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from rapidos import RapidosService
-from rapidos.service import UUIDGenerator
 from rapidos.web import create_app
-
-
-class MockIdGenerator(UUIDGenerator):
-
-    def __init__(self, id_: str):
-        self.id_ = id_
-
-    def new_id(self) -> str:
-        return self.id_
-
-
-class CreationServiceMock(RapidosService):
-    def __init__(self, id_: str):
-        super().__init__(MockIdGenerator(id_))
+from tests.fixtures import CreationServiceMock
 
 
 class RapidosApiTestBase(TestCase):
@@ -70,14 +55,33 @@ class TestSessionLocationApi(RapidosApiTestBase):
 
     def test_create_location(self):
         with self.app.test_client() as client:
-            expected_json = {
-                'name': 'test location',
-            }
             uuid_ = str(uuid.uuid4())
             service_mock = CreationServiceMock(uuid_)
 
             service_mock.create('Test Rapidos', datetime(2021, 4, 1), timedelta(minutes=30), 1)
             with self.app.container.creation_service.override(service_mock):
-                response = client.post(f'/api/rapidos/{uuid_}/locations', json=expected_json)
-            self.assertEqual(201, response.status_code, response)
-            self.assertEqual({'id': uuid_, 'name': 'test location'}, response.json)
+                response = client.post(f'/api/rapidos/{uuid_}/locations', json={'name': 'test location'})
+                self.assertEqual(201, response.status_code, response)
+                self.assertEqual({'id': uuid_, 'name': 'test location'}, response.json)
+
+    def test_get_locations(self):
+        with self.app.test_client() as client:
+            uuid_ = str(uuid.uuid4())
+            service_mock = CreationServiceMock(uuid_)
+            service_mock.create('Test Rapidos', datetime(2021, 4, 1), timedelta(minutes=30), 1)
+            session_location = service_mock.add_session_location('Test Location').to(uuid_)
+            with self.app.container.creation_service.override(service_mock):
+                response = client.get(f'/api/rapidos/{uuid_}/locations')
+                self.assertEqual(200, response.status_code, response)
+                self.assertEqual([{'id': session_location.id, 'name': session_location.name}], response.json)
+
+    def test_get_location(self):
+        with self.app.test_client() as client:
+            uuid_ = str(uuid.uuid4())
+            service_mock = CreationServiceMock(uuid_)
+            service_mock.create('Test Rapidos', datetime(2021, 4, 1), timedelta(minutes=30), 1)
+            session_location = service_mock.add_session_location('Test Location').to(uuid_)
+            with self.app.container.creation_service.override(service_mock):
+                response = client.get(f'/api/rapidos/{uuid_}/locations/{session_location.id}')
+                self.assertEqual(200, response.status_code, response)
+                self.assertEqual({'id': session_location.id, 'name': session_location.name}, response.json)
