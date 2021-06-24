@@ -85,3 +85,15 @@ class TestSessionLocationApi(RapidosApiTestBase):
                 response = client.get(f'/api/rapidos/{uuid_}/locations/{session_location.id}')
                 self.assertEqual(200, response.status_code, response)
                 self.assertEqual({'id': session_location.id, 'name': session_location.name}, response.json)
+
+    def test_remove_location(self):
+        with self.app.test_client() as client:
+            uuid_ = str(uuid.uuid4())
+            service_mock = CreationServiceMock(uuid_)
+            service_mock.create('Test Rapidos', datetime(2021, 4, 1), timedelta(minutes=30), 1)
+            session_location = service_mock.add_session_location('Test Location').to(uuid_)
+            with self.app.container.creation_service.override(service_mock):
+                response = client.delete(f'/api/rapidos/{uuid_}/locations/{session_location.id}')
+                self.assertEqual(200, response.status_code, response)
+
+                self.assertEqual(set(), service_mock.get_session_locations().of(uuid_))

@@ -4,6 +4,8 @@
 <link href='/static/css/bootstrap.min.css' rel="stylesheet">
 <link href='/static/css/main.min.css' rel="stylesheet">
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="/static/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
 {% endblock styles %}
 
 
@@ -16,6 +18,7 @@
 <main id="main">
     <div class="intro">
         <h3>Willkommen zum Open Space <i>{{rapidos.name}}</i></h3>
+        <input id="rapidos_id" type="hidden" value="{{ uuid }}"/>
 
     </div>
 
@@ -30,19 +33,27 @@
         <div class="container">
             <h2>Add new session location</h2>
             <form class="form-inline">
-                <input id="rapidos_id" type="hidden" value="{{ uuid }}"/>
                 <input id="session_location" type="text"/>
                 <button class="btn btn-info" id="add_location_button" type="button">add</button>
+            </form>
+            <h2>Add new timeslot</h2>
+            <form class="form-inline">
+                <div class="input-append date form_datetime">
+                    <input id="timeslot_start_time" type="text" value="{{ rapidos.start }}"/>
+                    <span class="add-on"><i class="icon-th"></i></span>
+                </div>
+                <input id="timeslot_duration" type="number" value="{{ rapidos.duration }}" />
+                <button class="btn btn-info" id="add_timeslot_button" type="button">add</button>
             </form>
 
             <div class="row" id="marketplace">
                 <table class="table">
                     <thead>
                     <tr id="marketplace_locations">
-
+                        <th id="empty"></th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="marketplace_timeslots">
 
                     </tbody>
                 </table>
@@ -80,5 +91,12 @@
 <script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
 <script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
 <script src="/static/js/marketplace.js"></script>
+<script src="/static/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript">
+    $(".form_datetime").datetimepicker({
+        format: "dd.mm.yyyy - hh:ii"
+    });
+</script>
+
 {%- endblock scripts %}
 

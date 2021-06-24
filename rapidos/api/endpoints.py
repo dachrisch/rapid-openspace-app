@@ -69,3 +69,8 @@ class SessionLocationResource(Resource):
             rapidos_service: RapidosService = Provide[Container.creation_service]):
         return next(
             filter(lambda location: location.id == location_id, rapidos_service.get_session_locations().of(rapidos_id)))
+
+    def delete(self,rapidos_id: str, location_id: str,
+            rapidos_service: RapidosService = Provide[Container.creation_service]):
+        rapidos_service.remove_session_locations(location_id).of(rapidos_id)
+        return 204

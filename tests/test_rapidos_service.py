@@ -38,3 +38,13 @@ class TestRapidosService(unittest.TestCase):
         self.assertEqual('123', location.id)
         self.assertEqual('Test Location', location.name)
 
+
+    def test_delete_session_location(self):
+        rapidos_service = RapidosService(MockIdGenerator('123'))
+        rapidos_service.create('Test', datetime(2021, 1, 1), timedelta(minutes=30), 1)
+        session_location = rapidos_service.add_session_location('Test Location').to('123')
+
+        rapidos_service.remove_session_locations(session_location.id).of('123')
+
+        locations = rapidos_service.get_session_locations().of('123')
+        self.assertEqual(0, len(locations))

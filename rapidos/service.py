@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime, timedelta
-from typing import List, Set
 
 from rapidos.entity import Rapidos, SessionLocation
 
@@ -30,13 +29,25 @@ class RapidosService(object):
     def get_session_locations(self):
         return SessionLocationRetriever(self)
 
+    def remove_session_locations(self, location_id: str):
+        return SessionLocationRemover(self, location_id)
+
+
+class SessionLocationRemover:
+    def __init__(self, rapidos_service: RapidosService, location_id: str):
+        self.rapidos_service = rapidos_service
+        self.location_id = location_id
+
+    def of(self, rapidos_id: str):
+        self.rapidos_service.get(rapidos_id).remove_session_location(self.location_id)
+
 
 class SessionLocationRetriever:
     def __init__(self, rapidos_service: RapidosService):
         self.rapidos_service = rapidos_service
 
-    def of(self, rapidos_id: str) -> Set[SessionLocation]:
-        return self.rapidos_service.get(rapidos_id).locations
+    def of(self, rapidos_id: str) -> set[SessionLocation]:
+        return set(self.rapidos_service.get(rapidos_id).locations.values())
 
 
 class SessionLocationBuilder(object):

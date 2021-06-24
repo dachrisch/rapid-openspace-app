@@ -15,11 +15,14 @@ class Rapidos(object):
         self._duration = duration
         self.start = start
         self.name = name
-        self.locations = set()
+        self.locations :Dict[str, SessionLocation]= {}
 
     @property
     def duration(self) -> int:
         return int(self._duration.total_seconds() / 60)
 
     def add_session_location(self, session_location: SessionLocation):
-        self.locations.add(session_location)
+        self.locations[session_location.id]=session_location
+
+    def remove_session_location(self, location_id:str):
+        self.locations.pop(location_id)
