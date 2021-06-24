@@ -1,7 +1,8 @@
-flask
-Flask-Bootstrap
-Flask-Classful
-flask_wtf
+# XXX: can't upgrade to 2.0 https://github.com/python-restx/flask-restx/issues/330
+flask ~= 1.1
+Flask-Bootstrap ~= 3.3
+Flask-Classful ~= 0.14
+flask_wtf ~= 0.15
 waitress
 dependency-injector
-flask_restx
+flask_restx ~= 0.4
